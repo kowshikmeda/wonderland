@@ -351,8 +351,8 @@ const sampleListings = [
   const updatedListings = sampleListings.map(listing => ({
     ...listing,   // Keep all existing properties
      // Replace image object with just the URL,
-    owner:"67a9b0c46bd6165b89b01ef3"
+    owner:"67d2ce3c67c7f6adc043baba"
 }));
 
-//console.log(updatedListings);
+
   module.exports = { data: updatedListings };

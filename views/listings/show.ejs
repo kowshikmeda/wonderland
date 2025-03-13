@@ -16,7 +16,7 @@
               </div>
         </div>
     </div>
-
+    
 <br>
 
     <div class="btns"> 
@@ -27,7 +27,7 @@
             </form>
         </div>
         <hr>
-   
+        
         <div class="col-8 offset-3">
             <% if(currUser){ %>
             <h4>Leave a Review:</h4>
@@ -66,10 +66,9 @@
                
             </form>
            <% } %>
-
-            <h4>All Reviews</h4>
-            
+            <% if(showlisting.reviews.length>0) {%>
                 <div class="row">
+                <h4>All Reviews</h4>
                 <% for ( review of showlisting.reviews){ %>
                     <div class="card col-5 mb-3 ms-3">
                         <div class="card-body ">
@@ -84,18 +83,58 @@
                             <button class="btn btn-dark btn-sm">Delete</button>
                             </form>
                         </div>
-                    </div>
-                   
+                    </div>         
                     <% } %>
-                </div>
-           
+                </div> 
+           <% } %>
            <!-- <p><%= showlisting.reviews %>  </p> -->
         </div>
+        <div class="col-8 offset-3">
+            <h3>Where you'll be</h3>
+            <div id="map"></div>
 
+        </div>
     
 
 
 </div>
 <br><br>
   
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var locationName = "<%= showlisting.location %>"; // Get the location from EJS
 
+        if (locationName) {
+            var apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lon = parseFloat(data[0].lon);
+
+                        // Initialize the map
+                        var map = L.map('map').setView([lat, lon], 17);
+
+                        // Add OpenStreetMap Standard tile layer
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                            maxZoom: 19
+                        }).addTo(map);
+
+                        
+                        // Add a marker at the fetched location
+                        L.marker([lat, lon]).addTo(map)
+                            .bindPopup(`<h3><b><%= showlisting.title %></b></h3> <p>is in here!!</p>`)
+                            .openPopup();
+                    } else {
+                        console.error("No results found for the given location.");
+                    }
+                })
+                .catch(error => console.error("Error fetching location:", error));
+        } else {
+            console.error("No location provided.");
+        }
+    });
+</script>

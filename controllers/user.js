@@ -6,11 +6,11 @@ module.exports.renderSignupForm=(req,res)=>{
 
 module.exports.signup=async (req,res)=>{
     try{
-       // console.log(req.body);
+       
     let {email,username,password}=req.body;
     let newUser=new User({email,username})
     let registeredUser=await User.register(newUser,password);
-  console.log(registeredUser);
+ 
   req.login(registeredUser,(err)=>{
     if(err){
         return next(err)
@@ -20,7 +20,7 @@ module.exports.signup=async (req,res)=>{
   })
     
     }catch(e){
-       // console.log(e);
+      
     req.flash("error",e.message);
    
     res.redirect("/signup");

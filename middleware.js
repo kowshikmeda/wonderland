@@ -8,7 +8,7 @@ module.exports.isLoggedIn=(req,res,next)=>{
     if(!req.isAuthenticated()){
         
         req.session.redirectUrl=req.originalUrl;
-        //console.log(req.orignalUrl);
+       
         req.flash("error","you must be logged in to do");
         return res.redirect("/login");
     }
@@ -17,7 +17,7 @@ module.exports.isLoggedIn=(req,res,next)=>{
 
 module.exports.saveRedirectUrl=(req,res,next)=>{
     if(req.session.redirectUrl){
-        console.log("hi");
+       
         res.locals.redirectUrl=req.session.redirectUrl;
     }
     next()
@@ -45,8 +45,7 @@ module.exports.validateListing=(req,res,next)=>{
 }
 
 module.exports.validateReview=(req,res,next)=>{
-    // console.log(req.body);
-   // req.body.review.rating = Number(req.body.review.rating);
+   
     let {error}=reviewSchema.validate(req.body);
     if(error){
         let errMsg=error.details.map((el)=>el.message).join(",");

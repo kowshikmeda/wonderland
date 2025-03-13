@@ -2,7 +2,7 @@ const Listings=require("../models/listing.js");
 
 module.exports.index=async(req,res)=>{
     let allListings= await Listings.find();
-   // console.log(allListings);
+  
     res.render("listings/index.ejs",{allListings});
     };
 
@@ -23,7 +23,7 @@ module.exports.showListing=async(req,res,next)=>{
     })
     .populate("owner");
     
-    console.log(showlisting);
+   
     if(!showlisting){
         req.flash("error","listing you requested that doesn't exist");
         res.redirect("/listings");
@@ -34,9 +34,9 @@ module.exports.showListing=async(req,res,next)=>{
 module.exports.createListing=async(req,res,next)=>{
     let url=req.file.path;
     let filename=req.file.filename;
-   // console.log(url ,"....",filename);
+   
     const newlisting=new Listings(req.body.listing);
-    //console.log(newlisting);
+   
     
     newlisting.owner=req.user._id;
     newlisting.image={url,filename};
@@ -47,7 +47,7 @@ module.exports.createListing=async(req,res,next)=>{
 
 module.exports.renderEditForm=async(req,res,next)=>{
     let {id}=req.params;
-    console.log(id);
+   
     let oldlisting=await Listings.findById(id);
     if(!oldlisting){
       req.flash("error","listing you requested that doesn't exist");
@@ -55,7 +55,7 @@ module.exports.renderEditForm=async(req,res,next)=>{
   }
   let originalImageUrl=oldlisting.image.url;
   originalImageUrl=originalImageUrl.replace("/upload","/upload/w_300");
-    console.log(oldlisting);
+   
     res.render("listings/edit.ejs",{oldlisting,originalImageUrl});
   }
 
@@ -67,13 +67,13 @@ module.exports.updateListing=async(req,res,next)=>{
     
     
     let updatelisting=req.body.listing;
-    //console.log(updatelisting);
+   
    let listing= await Listings.findByIdAndUpdate(id,{...updatelisting});
 
    if(typeof req.file !=="undefined" ){
     let url=req.file.path;
     let filename=req.file.filename;
-    console.log(url ,"....",filename);
+   
     listing.image={url,filename};
     await listing.save();
    }
@@ -83,9 +83,9 @@ module.exports.updateListing=async(req,res,next)=>{
 
 module.exports.destroyListing=async (req,res,next)=>{
     let {id}=req.params;
-    console.log(id);
+   
    let deleted= await Listings.findByIdAndDelete(id);
-  // console.log(deleted);
+ 
   req.flash("success","listing is deleted!!");
     res.redirect("/listings");
 }
